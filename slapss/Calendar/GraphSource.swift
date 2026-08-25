@@ -5,10 +5,10 @@
 //  Calendar source backed by Microsoft Graph. Mirrors EventKitSource's shape
 //  so the aggregator can treat them interchangeably.
 //
-//  Polling strategy: fetch every 5 minutes via a Timer. Graph supports webhook
+//  Polling strategy: fetch every 2 minutes via a Timer. Graph supports webhook
 //  subscriptions for real-time updates but those require a public HTTPS
-//  endpoint, which a sandboxed local app can't expose. 5-min staleness is
-//  acceptable for v1.
+//  endpoint, which a sandboxed local app can't expose, so polling staleness is
+//  the trade we accept.
 //
 //  Threading: @MainActor — all state mutations and user-facing properties live
 //  on the main actor. Network I/O happens via async/await which hops off and
@@ -249,13 +249,22 @@ final class GraphSource: ObservableObject {
         )
     }
 
+    /// NOT `Timer.scheduledTimer`: that enrolls the timer in `.default` runloop
+    /// mode only, so it stalls while a menu or the popover is tracking, and it
+    /// is App Nap-vulnerable in a menu bar app. Every other timer in the app
+    /// already uses the `Timer(...)` + `.common` form; this one was the last
+    /// holdout. It matters most for a Microsoft 365-only user: EventKit's
+    /// 30-second poll never starts for them (it is gated on calendar
+    /// permission), so this timer is the only thing pulling in changed events.
     private func startPollTimer() {
         pollTimer?.invalidate()
-        pollTimer = Timer.scheduledTimer(withTimeInterval: 2 * 60, repeats: true) { [weak self] _ in
+        let timer = Timer(timeInterval: 2 * 60, repeats: true) { [weak self] _ in
             MainActor.assumeIsolated {
                 self?.onChange?()
             }
         }
+        pollTimer = timer
+        RunLoop.main.add(timer, forMode: .common)
     }
 
     // MARK: - Static formatters

@@ -238,13 +238,27 @@ struct MenuBarContentView: View {
             // is hit — then it scrolls, with header/footer pinned.
             ScrollView {
                 Group {
-                    switch aggregator.permissionState {
-                    case .notDetermined:
-                        PermissionPromptView { Task { await aggregator.requestAccess() } }
-                    case .denied, .restricted:
-                        PermissionDeniedView()
-                    case .granted:
+                    // A Microsoft 365 / Exchange user may never grant EventKit
+                    // access — their meetings come from Graph, not Calendar.app.
+                    // Gating the whole agenda on the local calendar permission
+                    // hid a fully working M365 agenda behind a red "access
+                    // denied" screen, while the menu bar kept showing the same
+                    // meeting (it reads the merged event list, which has never
+                    // been permission-gated). Same rule as
+                    // `OnboardingView.canFinishOnboarding`: one working source
+                    // is enough. The denied state is still reachable — with its
+                    // "Open System Settings" button — in Settings → Calendars.
+                    if aggregator.isGraphSignedIn {
                         agendaSections
+                    } else {
+                        switch aggregator.permissionState {
+                        case .notDetermined:
+                            PermissionPromptView { Task { await aggregator.requestAccess() } }
+                        case .denied, .restricted:
+                            PermissionDeniedView()
+                        case .granted:
+                            agendaSections
+                        }
                     }
                 }
                 .onGeometryChange(for: CGFloat.self) { proxy in

@@ -32,6 +32,15 @@ final class CalendarAggregator: ObservableObject {
     /// view so it never tries to fire alerts for past events.
     @Published private(set) var pastMeetingsToday: [MeetingEvent] = []
     @Published private(set) var availableEventKitCalendars: [EKCalendar] = []
+    /// Whether a Microsoft 365 / Exchange account is currently signed in.
+    ///
+    /// `GraphSource` is a nested ObservableObject, and SwiftUI does not
+    /// propagate a nested object's changes to views that only observe the
+    /// parent — `OnboardingView` works around that with child views that
+    /// `@ObservedObject` the source directly. The popover needs the same fact
+    /// for its permission gate, so publish it from here rather than spreading
+    /// that workaround further.
+    @Published private(set) var isGraphSignedIn = false
 
     private struct EventKitCalendarFingerprint: Equatable {
         let identifier: String
@@ -72,6 +81,16 @@ final class CalendarAggregator: ObservableObject {
         graph.onChange = { [weak self] in
             self?.refresh()
         }
+        // Observed rather than folded into `onChange` above: that callback only
+        // fires on completed sign-in and on sign-out, so a token failure
+        // (`.error`) would leave the flag stuck at `true`.
+        graph.$state
+            .map { state in
+                if case .signedIn = state { return true }
+                return false
+            }
+            .removeDuplicates()
+            .assign(to: &$isGraphSignedIn)
     }
 
     deinit {
