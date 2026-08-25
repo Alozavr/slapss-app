@@ -5,6 +5,12 @@ All notable user-facing changes to Slapss.
 This file is the source of truth for release notes. The public web changelog and
 GitHub Releases are generated from it.
 
+## v2.0.1 — August 25, 2026
+
+- Fixed: if you use Slapss with a Microsoft 365 account and haven't given it access to the macOS Calendar app, the menu bar showed your next meeting but opening it said "Calendar access denied" instead of showing your agenda. Your agenda now appears whenever a Microsoft 365 account is signed in. Access to the macOS Calendar app is optional, and always was.
+- Fixed: Microsoft 365 calendars could stop refreshing in the background — while a menu was open, or after macOS put Slapss to sleep. New and changed meetings now arrive on time.
+- Slapss no longer asks macOS for read-only access to files you pick yourself. Nothing in the app ever used it. What's left is the sandbox itself, calendar access, and outbound network for Microsoft 365 — and you can check that on your own copy: `codesign -d --entitlements :- /Applications/slapss.app`
+
 ## v2.0.0 — August 21, 2026
 
 Slapss is now open source.

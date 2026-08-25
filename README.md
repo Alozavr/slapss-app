@@ -44,7 +44,9 @@ There is no Slapss server. There is nothing to have an outage.
 - Calendar and reminder data is read through Apple's EventKit and stays on your Mac.
 - Microsoft 365 calendars are fetched directly from Microsoft Graph by the app itself, using a read-only scope (`Calendars.Read`, `User.Read`). Tokens live in your keychain.
 - No analytics, no crash reporting SDK, no telemetry, no accounts.
-- The app is sandboxed. Its entitlements are the whole story — three of them, in [`slapss/slapss.entitlements`](slapss/slapss.entitlements): app sandbox, outbound network (for Microsoft Graph), and calendar access.
+- The app is sandboxed, and its entitlements are the whole story — three of them, in [`slapss/slapss.entitlements`](slapss/slapss.entitlements): app sandbox, outbound network (for Microsoft Graph), and calendar access. Don't take this on faith, read them off the copy you installed:
+  `codesign -d --entitlements :- /Applications/slapss.app`
+  Two things you may see that aren't in that file. Builds up to 2.0.0 also carried `com.apple.security.files.user-selected.read-only`, injected by an Xcode build setting (`ENABLE_USER_SELECTED_FILES`); no code path ever used it and 2.0.1 removes it. And a copy you build yourself carries `com.apple.security.get-task-allow`, which Xcode adds to local builds so a debugger can attach — App Store builds don't have it.
 
 ## Architecture
 
