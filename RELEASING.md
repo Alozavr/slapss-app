@@ -112,8 +112,16 @@ Build numbers are assigned by Xcode Cloud, not by you — see *Before you start*
 
 ## 4. GitHub Release
 
-Only after the App Store version is **live**. Releasing here first advertises a
-version users can't install yet.
+Any time after **Release check** is green — it does **not** wait for App Store
+approval (Can's call, 2026-08-25, first applied to v2.0.1).
+
+This used to be held back until the App Store build was live, because a release
+hanging off a tag reads as "this build is available" and publishing early
+advertises something nobody can install. That still describes the risk; what
+changed is that the risk isn't real here yet. Nobody is watching this repository
+for install announcements, and the release body can say plainly that the build is
+in review — v2.0.1's does. **If the repository ever gains an audience that reads
+releases as availability, put the old ordering back.**
 
 <https://github.com/theshiver/slapss-app/releases/new>
 
@@ -140,8 +148,8 @@ Nothing in that repo shows this; the wiring is in the Cloudflare dashboard.
 
 This step is numbered last but is not bound to the order above. Announcing a
 release on the site before the App Store build is approved is fine, and was done
-deliberately for 2.0.0. The GitHub Release is the one that has to wait, because
-it reads as "this build is available".
+deliberately for 2.0.0. Since 2.0.1 the same is true of the GitHub Release — see
+step 4.
 
 ---
 
@@ -152,9 +160,11 @@ edit → bump 4 version values → CHANGELOG.md → CLAUDE.md → push
   → Build green
   → tag + push tag → Release check green
   → Xcode Cloud build → App Store Connect → submit → live
-  → GitHub Release (tag, title, changelog body, label None, no binaries)
 
-slapss-web/changelog.html → push to main (Cloudflare publishes it; may run ahead)
+GitHub Release (tag, title, changelog body, label None, no binaries)
+slapss-web/changelog.html → push to main (Cloudflare publishes it)
+
+Neither of the last two waits for App Store approval.
 ```
 
 ## Things that go wrong
