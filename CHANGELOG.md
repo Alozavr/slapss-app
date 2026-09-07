@@ -5,6 +5,13 @@ All notable user-facing changes to Slapss.
 This file is the source of truth for release notes. The public web changelog and
 GitHub Releases are generated from it.
 
+## v2.1.0 — September 7, 2026
+
+- The menu bar can now show your next meeting further ahead than 15 minutes. Until now a meeting 35 minutes away showed nothing but the icon.
+- New setting for it: Settings → Menu bar → **Show the next meeting**. Pick **Off** for just the icon, **When it's close** to follow your lead-time setting (at least 15 minutes ahead), or **Anytime today** to always see the next meeting you have left today.
+- Meetings more than an hour away show their start time instead of a countdown, so you get "Standup · 11:30" rather than "Standup · in 690m".
+- If you liked the old behaviour, you keep it: **When it's close** is the default. The one difference is that it now respects your lead-time setting, so if you had asked for a 30 minute heads-up you will see meetings 30 minutes out instead of 15.
+
 ## v2.0.1 — August 25, 2026
 
 - Fixed: if you use Slapss with a Microsoft 365 account and haven't given it access to the macOS Calendar app, the menu bar showed your next meeting but opening it said "Calendar access denied" instead of showing your agenda. Your agenda now appears whenever a Microsoft 365 account is signed in. Access to the macOS Calendar app is optional, and always was.
