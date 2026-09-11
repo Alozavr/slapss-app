@@ -13,6 +13,7 @@ GitHub Releases are generated from it.
 - Fixed: when two meetings overlap, the menu bar agenda showed only one of them. The other was neither "later" nor "earlier", so it dropped out of the list entirely. Meetings running right now that aren't the highlighted one are listed under Later today.
 - Fixed: a reminder you hadn't completed dropped into Earlier today once its time passed, greyed out and drawn as if it were done. It now stays at the top of the list, marked with how long ago it was due, until you complete it. Earlier today is for finished meetings only.
 - Every meeting in the agenda that has an online link now has a small Join button on its row, so you can jump into a meeting that is running in parallel, or one that starts later, without expanding it first. Finished meetings don't get one.
+- Slapss now speaks Japanese. Contributed by [@satotakumi](https://github.com/satotakumi), the first outside contribution since the app went open source.
 
 ## v2.1.0 — September 7, 2026
 

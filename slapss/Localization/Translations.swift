@@ -1127,6 +1127,8 @@ extension LocalizationManager {
         "alert.snooze.5minutes":                    "5分後",
         "alert.snooze.10minutes":                   "10分後",
         "alert.snooze.15minutes":                   "15分後",
+        "alert.snooze.30minutes":                   "30分後",
+        "alert.snooze.1hour":                       "1時間後",
         "alert.snooze.untilEnd":                    "ミーティング終了まで",
 
         "alert.join.zoom":                          "Zoomミーティングに参加",
@@ -1259,7 +1261,7 @@ extension LocalizationManager {
 
         "menubar.inMinutes":                        "あと%d分",
         "menubar.left":                             "残り%d分",
-        "menubar.dueNow":                           "開始時刻",
+        "menubar.dueNow":                           "期限です",
         "menubar.minutesAgo":                       "%d分前",
 
         "notification.body":                        "%@に開始",
