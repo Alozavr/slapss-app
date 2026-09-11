@@ -39,6 +39,8 @@ extension LocalizationManager {
         "alert.snooze.5minutes":                    "5 minutes",
         "alert.snooze.10minutes":                   "10 minutes",
         "alert.snooze.15minutes":                   "15 minutes",
+        "alert.snooze.30minutes":                   "30 minutes",
+        "alert.snooze.1hour":                       "1 hour",
         "alert.snooze.untilEnd":                    "Until end of meeting",
 
         // Alert — join labels
@@ -225,6 +227,8 @@ extension LocalizationManager {
         "alert.snooze.5minutes":                    "5 dakika",
         "alert.snooze.10minutes":                   "10 dakika",
         "alert.snooze.15minutes":                   "15 dakika",
+        "alert.snooze.30minutes":                   "30 dakika",
+        "alert.snooze.1hour":                       "1 saat",
         "alert.snooze.untilEnd":                    "Toplantı bitene kadar",
 
         "alert.join.zoom":                          "Zoom Toplantısına Katıl",
@@ -403,6 +407,8 @@ extension LocalizationManager {
         "alert.snooze.5minutes":                    "5 minutos",
         "alert.snooze.10minutes":                   "10 minutos",
         "alert.snooze.15minutes":                   "15 minutos",
+        "alert.snooze.30minutes":                   "30 minutos",
+        "alert.snooze.1hour":                       "1 hora",
         "alert.snooze.untilEnd":                    "Hasta el final de la reunión",
 
         "alert.join.zoom":                          "Unirse a Zoom",
@@ -581,6 +587,8 @@ extension LocalizationManager {
         "alert.snooze.5minutes":                    "5 Minuten",
         "alert.snooze.10minutes":                   "10 Minuten",
         "alert.snooze.15minutes":                   "15 Minuten",
+        "alert.snooze.30minutes":                   "30 Minuten",
+        "alert.snooze.1hour":                       "1 Stunde",
         "alert.snooze.untilEnd":                    "Bis zum Ende des Meetings",
 
         "alert.join.zoom":                          "Zoom-Meeting beitreten",
@@ -759,6 +767,8 @@ extension LocalizationManager {
         "alert.snooze.5minutes":                    "5 minuti",
         "alert.snooze.10minutes":                   "10 minuti",
         "alert.snooze.15minutes":                   "15 minuti",
+        "alert.snooze.30minutes":                   "30 minuti",
+        "alert.snooze.1hour":                       "1 ora",
         "alert.snooze.untilEnd":                    "Fino alla fine della riunione",
 
         "alert.join.zoom":                          "Partecipa a Zoom",
@@ -937,6 +947,8 @@ extension LocalizationManager {
         "alert.snooze.5minutes":                    "5 minutes",
         "alert.snooze.10minutes":                   "10 minutes",
         "alert.snooze.15minutes":                   "15 minutes",
+        "alert.snooze.30minutes":                   "30 minutes",
+        "alert.snooze.1hour":                       "1 heure",
         "alert.snooze.untilEnd":                    "Jusqu'à la fin de la réunion",
 
         "alert.join.zoom":                          "Rejoindre Zoom",

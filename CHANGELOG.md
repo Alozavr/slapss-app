@@ -5,6 +5,15 @@ All notable user-facing changes to Slapss.
 This file is the source of truth for release notes. The public web changelog and
 GitHub Releases are generated from it.
 
+## v2.1.1 — September 11, 2026
+
+- Fixed: for some Zoom invitations the **Join** button opened a small Zoom logo image instead of the meeting. Zoom's Outlook add-in puts that logo above the join link in the invitation, and Slapss was picking up the first Zoom address it saw. It now skips images and other page assets and finds the actual join link.
+- Snooze now offers **30 minutes** and **1 hour** on top of 1, 5, 10 and 15 minutes.
+- Fixed: the snooze menu on the full-screen alert was cut off at the top of the card, hiding the shorter options.
+- Fixed: when two meetings overlap, the menu bar agenda showed only one of them. The other was neither "later" nor "earlier", so it dropped out of the list entirely. Meetings running right now that aren't the highlighted one are listed under Later today.
+- Fixed: a reminder you hadn't completed dropped into Earlier today once its time passed, greyed out and drawn as if it were done. It now stays at the top of the list, marked with how long ago it was due, until you complete it. Earlier today is for finished meetings only.
+- Every meeting in the agenda that has an online link now has a small Join button on its row, so you can jump into a meeting that is running in parallel, or one that starts later, without expanding it first. Finished meetings don't get one.
+
 ## v2.1.0 — September 7, 2026
 
 - The menu bar can now show your next meeting further ahead than 15 minutes. Until now a meeting 35 minutes away showed nothing but the icon.
