@@ -5,6 +5,10 @@ All notable user-facing changes to Slapss.
 This file is the source of truth for release notes. The public web changelog and
 GitHub Releases are generated from it.
 
+## Unreleased
+
+- Join Yandex Telemost meetings directly from links in calendar event descriptions and locations.
+
 ## v2.1.1 — September 11, 2026
 
 - Fixed: for some Zoom invitations the **Join** button opened a small Zoom logo image instead of the meeting. Zoom's Outlook add-in puts that logo above the join link in the invitation, and Slapss was picking up the first Zoom address it saw. It now skips images and other page assets and finds the actual join link.
