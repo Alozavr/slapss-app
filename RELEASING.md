@@ -45,8 +45,8 @@ Number**, where it can also be reset if it ever needs to jump.
 3. **`CHANGELOG.md`** — add a `## vX.Y.Z — Month D, YYYY` entry at the top.
    Plain user language, no implementation detail. This is the source of truth
    everything else is copied from.
-4. **`CLAUDE.md`** — add the engineering record to the *Changelog log* at the
-   bottom. Different audience: this one is allowed to be technical, and should
+4. **`ENGINEERING-LOG.md`** — add the engineering record at the top. Different
+   audience: this one is allowed to be technical, and should
    explain *why*, not just *what*. If the change relied on a non-obvious macOS
    or SwiftUI behaviour, add it to *Non-obvious patterns and gotchas* too.
 5. Commit and push to `main`.
@@ -156,7 +156,7 @@ step 4.
 ## The short version
 
 ```
-edit → bump 4 version values → CHANGELOG.md → CLAUDE.md → push
+edit → bump 4 version values → CHANGELOG.md → ENGINEERING-LOG.md → push
   → Build green
   → tag + push tag → Release check green
   → Xcode Cloud build → App Store Connect → submit → live
@@ -180,7 +180,7 @@ problem, Xcode Cloud already increments that on its own.
 **Shipping under the current version.** Sometimes the right call for a small
 fix. Then don't invent a new version: amend the existing `CHANGELOG.md` entry
 and the existing GitHub Release rather than creating new ones, and record the
-decision in `CLAUDE.md`.
+decision in `ENGINEERING-LOG.md`.
 
 **Building from source is Xcode 26+.** The project sets
 `SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor`. Older Xcode ignores it silently and

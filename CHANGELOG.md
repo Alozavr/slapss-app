@@ -9,6 +9,27 @@ GitHub Releases are generated from it.
 
 - Join Yandex Telemost meetings directly from links in calendar event descriptions and locations.
 
+## v2.2.0 — September 23, 2026
+
+A release about how Slapss looks and feels.
+
+- A new app icon: the same Slapss hand, now on the warm sunset colors of the new look, with the proper rounded macOS shape. The menu bar icon was redrawn to match.
+
+- The full-screen alert now glides in and fades out instead of snapping on and off. The card rises into place and its contents follow one after another.
+- The status at the top of the alert changes with the meeting: a clock while it's still a few minutes away, a ringing bell in the last minute, green once it has started, orange when you're late. The countdown numbers roll instead of jumping.
+- The background comes alive as the meeting gets closer. Once it's about to start, a glow runs around the edge of the card and a sweep of light crosses the Join button.
+- If you're running late, the card gives a small shake to get your attention.
+- The Snooze menu springs open, with its options cascading in.
+- Pressing Return now visibly presses the Join button, the same as clicking it.
+- The menu bar popup has a new look to match the alert. The next-meeting card now carries the same colors as your full-screen alert and comes alive as the meeting gets close: in the five minutes around the start, a glow runs around it and its Join button catches the light. The countdown rolls from minute to minute, and the Join button opens the meeting straight away.
+- Meetings in the list show their calendar's color, and the popup's cards and buttons share one cleaner style.
+- The welcome window now names the right step when it asks you to allow calendar access (it always said step 1, but that step moved to 3 when language and theme were added in front of it). Fixed in all seven languages.
+- The welcome window and Settings follow the same look. The theme picker now shows a preview of each theme's actual full-screen alert, and Settings → About has a small brand card.
+- Fixed: after you opened the menu bar popup once, its animations kept running in the background after it closed, using battery for nothing. They now stop as soon as the popup closes.
+- The full-screen alert keeps its dark look even when your Mac is in light mode, so the text on it stays easy to read.
+- All of this motion switches off when Reduce Motion is on in System Settings.
+- Slapss now needs macOS 15 Sequoia or later. On macOS 14, the App Store keeps offering version 2.1.1.
+
 ## v2.1.1 — September 11, 2026
 
 - Fixed: for some Zoom invitations the **Join** button opened a small Zoom logo image instead of the meeting. Zoom's Outlook add-in puts that logo above the join link in the invitation, and Slapss was picking up the first Zoom address it saw. It now skips images and other page assets and finds the actual join link.
