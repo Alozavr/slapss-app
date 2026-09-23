@@ -4,7 +4,7 @@ macOS menu bar app (SwiftUI + AppKit hybrid). Shows meetings from macOS Calendar
 
 Two repos:
 - `slapss-app` — macOS app (this repo). **Public**, Apache-2.0. See `CONTRIBUTING.md`.
-- `slapss-web` — marketing site on Cloudflare. **Private**, not published. The user-facing changelog is served from it at <https://slapss-app.com/changelog.html>.
+- `slapss-web` — marketing site on Cloudflare. **Private repo**; a push to its `main` deploys the live site. The user-facing changelog is served from it at <https://slapss-app.com/changelog.html>.
 
 `CHANGELOG.md` in this repo is the source of truth for user-facing release notes; `changelog.html` and GitHub Releases are copied from it. `ENGINEERING-LOG.md` is the separate engineering record — different audience, keep both.
 
@@ -14,8 +14,8 @@ Two repos:
 
 - **Never bump version numbers without asking Can first.** He decides the version.
 - **Release process is in `RELEASING.md`.** Follow it in order; the ordering is what keeps the App Store, the tag, the GitHub Release, and the marketing site in step.
-- **After every user-visible change, update `CHANGELOG.md` first**, then mirror it into `slapss-web/changelog.html` (separate private repo). Record the engineering detail in `ENGINEERING-LOG.md`. No exceptions.
-- Never touch `slapss-web` unless the change requires updating privacy/terms or the changelog.
+- **After every user-visible change, update `CHANGELOG.md` first**, then mirror it into `slapss-web/changelog.html` (separate private repo). Record the engineering detail in `ENGINEERING-LOG.md`.
+- Touch `slapss-web` only for the changelog, or when a change alters privacy, support, or feature copy (see the impact map in the workspace `CLAUDE.md`).
 
 ---
 
@@ -118,15 +118,11 @@ v1.8 originally scoped "suppress the overlay while screen sharing" using `INFocu
 
 ### EventKit reuses one identifier for every occurrence of a recurring event
 
-`EKEvent.eventIdentifier` is identical for Monday's stand-up and Tuesday's. Before v2.0 `MeetingEvent.id` was just `"ek:" + eventIdentifier`, so a whole recurring series collapsed into a single id — and everything keyed by that id (`dismissedIDs`, `snoozeUntil`, `menuBarMutedIDs`, `scheduledEffectiveStart`) treated the series as one item.
-
-The user-visible bug: dismissing one occurrence's overlay inserted the shared id into `dismissedIDs`, which is **insert-only and never cleared**, so `reschedule` skipped every future occurrence at the `guard !dismissedIDs.contains` line and no timer was ever created again. Meanwhile the menu-bar countdown reads `aggregator.upcomingMeetings` directly (`ContentView`), which has no dismissal filter — so the countdown looked perfect while the alert silently never fired. Reported from the field as "the first meeting of each day never alerts" (it was the reporter's daily recurring stand-up).
-
-`toMeetingEvent` now appends `"#<occurrence-start-epoch>"`. Microsoft Graph was never affected: `calendarView` expands series into per-occurrence objects with distinct ids.
+`EKEvent.eventIdentifier` is identical for Monday's stand-up and Tuesday's, so `toMeetingEvent` appends `"#<occurrence-start-epoch>"` to `MeetingEvent.id`. Without the suffix everything keyed by that id (`dismissedIDs`, `snoozeUntil`, `menuBarMutedIDs`, `scheduledEffectiveStart`) treats a whole series as one item: `dismissedIDs` is **insert-only and never cleared**, so dismissing one occurrence silences every future one, while the menu-bar countdown (which reads `aggregator.upcomingMeetings` with no dismissal filter) keeps looking correct. Microsoft Graph was never affected: `calendarView` expands series into per-occurrence objects with distinct ids.
 
 Consequences:
 - A detached instance moved to a different time gets a new id. That's intended — it's a different slot and deserves its own alert.
-- `dismissedIDs` no longer collapses across a series, so it grows by roughly one entry per dismissed occurrence over long uptimes. Deliberately **not** pruned against the current meeting set: a transient EventKit fetch hiccup would resurrect an alert the user already dismissed, which is worse than a set of short strings.
+- `dismissedIDs` grows by roughly one entry per dismissed occurrence over long uptimes. Deliberately **not** pruned against the current meeting set: a transient EventKit fetch hiccup would resurrect an alert the user already dismissed, which is worse than a set of short strings.
 - `eventIdentifier` can still be nil, in which case the id falls back to a fresh `UUID()` on every fetch. Pre-existing and untouched; only affects unsaved events.
 
 ### `eventKitIdentifier` parses the `id` prefix AND the occurrence suffix — don't change either scheme without updating it
@@ -154,26 +150,17 @@ The accent layer (mesh card bases, pill, hero tints, the gradient CTA) lives in 
 ### A nested ObservableObject's changes don't reach views that observe only the parent
 `CalendarAggregator.graph` is itself an `ObservableObject`. SwiftUI does not forward a nested object's `objectWillChange` to views that observe the parent, so a view holding only `@EnvironmentObject var aggregator` will not re-render when `graph.state` changes. `OnboardingView` works around it with child views that `@ObservedObject` the `GraphSource` directly (`MicrosoftStep`, `GraphCalendarsList`). When the parent itself needs the fact, mirror it instead: `CalendarAggregator.isGraphSignedIn` is a Combine `assign(to:)` mirror of `graph.$state`, added in 2.0.1 for the popover gate. Prefer mirroring over spreading child-view workarounds.
 
-### The shipped binary carried a fourth entitlement that was not in the entitlements file (removed in 2.0.1)
+### Build settings can inject entitlements that aren't in the entitlements file
 
-`slapss/slapss.entitlements` lists three. `codesign -d --entitlements :- /Applications/slapss.app`
-on an App Store build **up to 2.0.0** reports four: the extra one is
-`com.apple.security.files.user-selected.read-only`, injected at build time by
-`ENABLE_USER_SELECTED_FILES = readonly`, set in both configurations of the pbxproj.
-No code path opens an `NSOpenPanel` or a `fileImporter`, so it was never used.
-
-This matters more than its permission scope does. The privacy claim is "the
-entitlements are the whole story", so a reader who runs `codesign` and counts four
-against a document that says three has caught the project overstating, on exactly
-the claim the open-sourcing was meant to make checkable. Found 2026-08-24 while
-preparing a Show HN post, before anyone else found it.
-
-2.0.1 sets `ENABLE_USER_SELECTED_FILES = NO` in both configurations — an explicit
-`NO` rather than a deleted line, matching the neighbouring `ENABLE_RESOURCE_ACCESS_*
-= NO` entries. Validated, not assumed: an ad-hoc-signed local **Release** build was
-inspected with `codesign -d --entitlements :-` and reports exactly the three from
-the entitlements file. `README.md` and `SECURITY.md` say three again and record
-what older builds carried.
+`slapss/slapss.entitlements` lists three, and the shipped binary must carry exactly
+those three. The privacy claim is "the entitlements are the whole story", so a reader
+who runs `codesign -d --entitlements :-` and counts more than the documents say has
+caught the project overstating. `ENABLE_*` build settings inject entitlements at build
+time: `ENABLE_USER_SELECTED_FILES` is set to an explicit `NO` in both configurations
+(matching the neighbouring `ENABLE_RESOURCE_ACCESS_* = NO`) because `readonly` added
+`com.apple.security.files.user-selected.read-only` to builds up to 2.0.0. After
+touching capabilities, check a local Release build with `codesign`. `README.md` and
+`SECURITY.md` state the count and what older builds carried.
 
 One report that will keep coming back: a copy someone builds themselves also
 carries `com.apple.security.get-task-allow`, which Xcode adds to any
@@ -186,7 +173,7 @@ next message.
 
 - `MARKETING_VERSION` and `CURRENT_PROJECT_VERSION` live in `slapss.xcodeproj/project.pbxproj` (two occurrences each — Debug + Release).
 - **Only `MARKETING_VERSION` matters for a release.** Bump both its occurrences together, and always ask Can for the number first.
-- **`CURRENT_PROJECT_VERSION` is dead weight.** Xcode Cloud assigns the build number itself, sequentially per product, and overrides whatever the project says. The committed value reads `15` while App Store Connect has already delivered build 17 and is on 19 next. Don't bump it, and don't trust it — the real counter lives in App Store Connect → Xcode Cloud → Settings → Build Number.
+- **`CURRENT_PROJECT_VERSION` is dead weight.** Xcode Cloud assigns the build number itself, sequentially per product, and overrides whatever the project says. The committed value is knowingly behind. Don't bump it, and don't trust it — the real counter lives in App Store Connect → Xcode Cloud → Settings → Build Number.
 
 ---
 
