@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="slapss/Assets.xcassets/AppIcon.appiconset/icon_128x128.png" width="112" alt="Slapss app icon">
+<img src="docs/app-icon.png" width="112" alt="Slapss app icon">
 
 # Slapss
 
